@@ -6,6 +6,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.*;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CardsApplicationTests {
@@ -61,6 +63,95 @@ public class CardsApplicationTests {
 		Card card5 = deck.getCardDeck().get(4);
 
 		Assert.assertEquals(5, deck.search(card5));
+	}
+
+	@Test
+	public void newOrder() {
+		Deck deck = new Deck();
+		deck.shuffle();
+
+		deck.newOrder();
+		List<Card> cards = deck.getCardDeck();
+		List<Card> expectedCards = getExpectedList();
+
+		// expect order to be hearts A-K, clubs A-K, diamonds K-A, spades K-A)
+		Iterator<Card> iter = cards.iterator();
+		Iterator<Card> expected = expectedCards.iterator();
+		while (iter.hasNext()) {
+			Assert.assertEquals(expected.next(), iter.next());
+		}
+	}
+
+	@Test
+	public void testPinochle() {
+		PinochleDeck deck = new PinochleDeck();
+		deck.shuffle();
+
+		deck.newOrder();
+		List<Card> cards = deck.getCardDeck();
+		List<Card> expectedCards = getExpectedPinochleList();
+
+		// expect order to be hearts A-K, clubs A-K, diamonds K-A, spades K-A)
+		Iterator<Card> iter = cards.iterator();
+		Iterator<Card> expected = expectedCards.iterator();
+		while (iter.hasNext()) {
+			Assert.assertEquals(expected.next(), iter.next());
+		}
+	}
+
+	private List<Card> getExpectedList() {
+		List<Card> list = new ArrayList<>();
+		List<Card.Value> reversedVals = Arrays.asList(Card.Value.values());
+		Collections.reverse(reversedVals);
+
+		for(Card.Value value : Card.Value.values()) {
+			list.add(new Card(Card.Suit.HEARTS, value));
+		}
+		for(Card.Value value : Card.Value.values()) {
+			list.add(new Card(Card.Suit.CLUBS, value));
+		}
+		for(Card.Value value : reversedVals) {
+			list.add(new Card(Card.Suit.DIAMONDS, value));
+		}
+		for(Card.Value value : reversedVals) {
+			list.add(new Card(Card.Suit.SPADES, value));
+		}
+
+		return list;
+	}
+
+	private List<Card> getExpectedPinochleList() {
+		List<Card> list = new ArrayList<>();
+		List<Card.Value> reversedVals = Arrays.asList(Card.Value.values());
+		Collections.reverse(reversedVals);
+		List<Card.Value> excluded = Arrays.asList(PinochleDeck.excludedValues);
+
+		for(Card.Value value : Card.Value.values()) {
+			if (!excluded.contains(value)) {
+				list.add(new Card(Card.Suit.HEARTS, value));
+				list.add(new Card(Card.Suit.HEARTS, value));
+			}
+		}
+		for(Card.Value value : Card.Value.values()) {
+			if (!excluded.contains(value)) {
+				list.add(new Card(Card.Suit.CLUBS, value));
+				list.add(new Card(Card.Suit.CLUBS, value));
+			}
+		}
+		for(Card.Value value : reversedVals) {
+			if (!excluded.contains(value)) {
+				list.add(new Card(Card.Suit.DIAMONDS, value));
+				list.add(new Card(Card.Suit.DIAMONDS, value));
+			}
+		}
+		for(Card.Value value : reversedVals) {
+			if (!excluded.contains(value)) {
+				list.add(new Card(Card.Suit.SPADES, value));
+				list.add(new Card(Card.Suit.SPADES, value));
+			}
+		}
+
+		return list;
 	}
 
 }

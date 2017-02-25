@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Deck {
     // deck of cards where card at 0 is the top of the deck
-    List<Card> cardDeck = new LinkedList<>();
+    protected List<Card> cardDeck = new LinkedList<>();
 
     /**
      * Generate a normal deck of 52 cards (no jokers)

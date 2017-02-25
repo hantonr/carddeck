@@ -73,4 +73,12 @@ public class Card implements Comparable<Card> {
         // this should never happen
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "suit=" + suit +
+                ", value=" + value +
+                '}';
+    }
 }
